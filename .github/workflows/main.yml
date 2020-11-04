@@ -84,7 +84,7 @@ jobs:
       - uses: actions/download-artifact@v2
         with:
           name: bin
-      - run: Get-Content .\bin\lib.dll
+      - run: Get-Content .\lib.dll
   run-l1-apl:
     runs-on: windows-latest
     needs: [update-installations]
