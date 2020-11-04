@@ -17,12 +17,12 @@ jobs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Run a one-line script
-        run: build.ps1
+      - name: Run build script
+        run: .\build.ps1
   build-apl:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Run a one-line script
-        run: echo Hello, world!
+      - name: Run build script
+        run: .\build.ps1 -Target build-apl -Verbose
     
