@@ -80,8 +80,9 @@ jobs:
     needs: [build-csharp]
     steps:
       - uses: actions/checkout@v2
-      - name: Run build script
-        run: .\build.ps1 -Target run-l0-csharp -Verbose    
+      - run: .\build.ps1 -Target run-l0-csharp -Verbose    
+      - uses: actions/download-artifact@v2
+      - run: Get-Content .\bin\lib.dll
   run-l1-apl:
     runs-on: windows-latest
     needs: [update-installations]
