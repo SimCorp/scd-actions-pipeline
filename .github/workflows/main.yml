@@ -23,7 +23,7 @@ jobs:
       - run: Set-Content .\bin\lib.dll 'lib'
       - uses: actions/upload-artifact@v2
         with:
-          name: binaries
+          name: bin
           path: .\bin        
   build-apl-sysobjs:
     runs-on: windows-latest
@@ -83,7 +83,7 @@ jobs:
       - run: .\build.ps1 -Target run-l0-csharp -Verbose    
       - uses: actions/download-artifact@v2
         with:
-          name: binaries
+          name: bin
       - run: Get-Content .\bin\lib.dll
   run-l1-apl:
     runs-on: windows-latest
