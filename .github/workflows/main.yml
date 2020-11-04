@@ -25,6 +25,30 @@ jobs:
       - uses: actions/checkout@v2
       - name: Run build script
         run: .\build.ps1 -Target build-apl-sysobjs -Verbose
+  sonarqube-scan:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Run build script
+        run: .\build.ps1 -Target sonarqube-scan -Verbose
+  apl-func-chk:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Run build script
+        run: .\build.ps1 -Target apl-func-chk -Verbose
+  qc-chk-chkinst:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Run build script
+        run: .\build.ps1 -Target qc-chk-chkinst -Verbose
+  deploy-base-installations:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Run build script
+        run: .\build.ps1 -Target deploy-base-installations -Verbose
   package-ims:
     runs-on: windows-latest
     needs: [build-csharp, build-apl-sysobjs]
@@ -32,3 +56,52 @@ jobs:
       - uses: actions/checkout@v2
       - name: Run build script
         run: .\build.ps1 -Target package-ims -Verbose    
+  build-scd-media:
+    runs-on: windows-latest
+    needs: [package-ims]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Run build script
+        run: .\build.ps1 -Target build-scd-media -Verbose    
+  update-installations:
+    runs-on: windows-latest
+    needs: [build-scd-media]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Run build script
+        run: .\build.ps1 -Target update-installations -Verbose    
+  run-l0-csharp:
+    runs-on: windows-latest
+    needs: [build-csharp]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Run build script
+        run: .\build.ps1 -Target run-l0-csharp -Verbose    
+  run-l1-apl:
+    runs-on: windows-latest
+    needs: [update-installations]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Run build script
+        run: .\build.ps1 -Target run-l1-apl -Verbose    
+  run-l1-csharp:
+    runs-on: windows-latest
+    needs: [update-installations]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Run build script
+        run: .\build.ps1 -Target run-l1-csarp -Verbose    
+  run-l2-apl:
+    runs-on: windows-latest
+    needs: [update-installations]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Run build script
+        run: .\build.ps1 -Target run-l2-apl -Verbose    
+  run-l2-csharp:
+    runs-on: windows-latest
+    needs: [update-installations]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Run build script
+        run: .\build.ps1 -Target run-l2-csharp -verbose    
