@@ -23,8 +23,12 @@ jobs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Run build script
-        run: .\build.ps1 -Target build-apl-sysobjs -Verbose
+      - run: .\build.ps1 -Target build-apl-sysobjs -Verbose
+      - run: md bin
+      - run: sc .\bin\lib.dll 'lib'
+      - uses: actions/upload-artifact@v2
+        with:
+          path: .\bin
   sonarqube-scan:
     runs-on: windows-latest
     steps:
