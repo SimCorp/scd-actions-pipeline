@@ -18,11 +18,17 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Run build script
-        run: .\build.ps1
-  build-apl:
+        run: .\build.ps1 -Target build-csharp -Verbose
+  build-apl-sysobjs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v2
       - name: Run build script
-        run: .\build.ps1 -Target build-apl -Verbose
-    
+        run: .\build.ps1 -Target build-apl-sysobjs -Verbose
+  package-ims:
+    runs-on: windows-latest
+    needs: [build-csharp, build-apl-sysobjs]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Run build script
+        run: .\build.ps1 -Target package-ims -Verbose    
