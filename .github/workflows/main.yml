@@ -16,19 +16,91 @@ jobs:
   build-csharp:
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v2
-      - name: Run build script
+      - name: Checkout (Action from GitHub)
+        uses: actions/checkout@v2
+      - name: Build C#
         run: .\build.ps1 -Target build-csharp -Verbose
+      - name: Create some "arfifact folder"      
+        run: md bin
+      - name: Create some "arfifact"
+        run: Set-Content .\bin\lib.dll 'lib'
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: bin
+          path: .\bin        
   build-apl-sysobjs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Run build script
-        run: .\build.ps1 -Target build-apl-sysobjs -Verbose
+      - run: .\build.ps1 -Target build-apl-sysobjs -Verbose
+  sonarqube-scan:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: .\build.ps1 -Target sonarqube-scan -Verbose
+  apl-func-chk:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: .\build.ps1 -Target apl-func-chk -Verbose
+  qc-chk-chkinst:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: .\build.ps1 -Target qc-chk-chkinst -Verbose
+  deploy-base-installations:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: .\build.ps1 -Target deploy-base-installations -Verbose
   package-ims:
     runs-on: windows-latest
     needs: [build-csharp, build-apl-sysobjs]
     steps:
       - uses: actions/checkout@v2
-      - name: Run build script
-        run: .\build.ps1 -Target package-ims -Verbose    
+      - run: .\build.ps1 -Target package-ims -Verbose    
+  build-scd-media:
+    runs-on: windows-latest
+    needs: [package-ims]
+    steps:
+      - uses: actions/checkout@v2
+      - run: .\build.ps1 -Target build-scd-media -Verbose    
+  update-installations:
+    runs-on: windows-latest
+    needs: [build-scd-media]
+    steps:
+      - uses: actions/checkout@v2
+      - run: .\build.ps1 -Target update-installations -Verbose    
+  run-l0-csharp:
+    runs-on: windows-latest
+    needs: [build-csharp]
+    steps:
+      - uses: actions/checkout@v2
+      - run: .\build.ps1 -Target run-l0-csharp -Verbose    
+      - uses: actions/download-artifact@v2
+      - run: Get-Content .\bin\lib.dll
+  run-l1-apl:
+    runs-on: windows-latest
+    needs: [update-installations]
+    steps:
+      - uses: actions/checkout@v2
+      - run: .\build.ps1 -Target run-l1-apl -Verbose    
+  run-l1-csharp:
+    runs-on: windows-latest
+    needs: [update-installations]
+    steps:
+      - uses: actions/checkout@v2
+      - run: .\build.ps1 -Target run-l1-csarp -Verbose    
+  run-l2-apl:
+    runs-on: windows-latest
+    needs: [update-installations]
+    steps:
+      - uses: actions/checkout@v2
+      - run: .\build.ps1 -Target run-l2-apl -Verbose    
+  run-l2-csharp:
+    runs-on: windows-latest
+    needs: [update-installations]
+    steps:
+      - uses: actions/checkout@v2
+      - run: .\build.ps1 -Target run-l2-csharp -verbose
