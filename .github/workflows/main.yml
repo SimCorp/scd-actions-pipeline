@@ -74,7 +74,7 @@ jobs:
       - run: .\build.ps1 -Target update-installations -Verbose
   run-l0-apl:
     runs-on: windows-latest
-    needs: [update-installations]
+    needs: [build-apl-sysobjs]
     steps:
       - uses: actions/checkout@v2
       - run: .\build.ps1 -Target run-l0-apl -Verbose          
