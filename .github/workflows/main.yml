@@ -71,7 +71,13 @@ jobs:
     needs: [build-scd-media]
     steps:
       - uses: actions/checkout@v2
-      - run: .\build.ps1 -Target update-installations -Verbose    
+      - run: .\build.ps1 -Target update-installations -Verbose
+  run-l0-apl:
+    runs-on: windows-latest
+    needs: [update-installations]
+    steps:
+      - uses: actions/checkout@v2
+      - run: .\build.ps1 -Target run-l0-apl -Verbose          
   run-l0-csharp:
     runs-on: windows-latest
     needs: [build-csharp]
